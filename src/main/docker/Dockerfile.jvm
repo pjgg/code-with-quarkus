@@ -1,0 +1,36 @@
+####
+# This Dockerfile.native is used in order to build a container that runs the Quarkus application in JVM mode
+#
+# Before building the container image run:
+#
+# mvn package
+#
+# Then, build the image with:
+#
+# docker build -f src/main/docker/Dockerfile.native.jvm -t quarkus/code-with-quarkus-jvm .
+#
+# Then run the container using:
+#
+# docker run -i --rm -p 8080:8080 quarkus/code-with-quarkus-jvm
+#
+# If you want to include the debug port into your docker image
+# you will have to expose the debug port (default 5005) like this :  EXPOSE 8080 5050
+# 
+# Then run the container using : 
+#
+# docker run -i --rm -p 8080:8080 -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/code-with-quarkus-jvm
+#
+###
+FROM adoptopenjdk/openjdk11:armv7l-debianslim-jdk-11.0.8_10
+
+WORKDIR /app
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+
+COPY target/lib/* /app/lib/
+COPY target/*-runner.jar /app/app.jar
+
+EXPOSE 8080
+EXPOSE 5005
+USER 1001
+
+ENTRYPOINT [ "sh", "-c", "java -jar /app/app.jar"]
