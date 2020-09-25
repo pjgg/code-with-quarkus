@@ -30,3 +30,4 @@ Create a docker java image: `make build-docker-image`
 Push to DockerHub registry: `make push-docker-image`
 
 Run docker image: `make run-docker-image`
+
