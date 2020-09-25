@@ -8,12 +8,18 @@ branches:
     - "/^fix-.*/"
     - "/^chore-.*/"
     - "/^doc-.*/"
+    - "/^v.*$/"
+
 jobs:
   include:
     - stage: compile
       name: openjdk 11 / Build / Test
       jdk: openjdk11
       script: mvn clean test install
+    - stage: package_and_publish
+      name: package docker image and push to registry
+      jdk: openjdk11
+      script: make build-docker-native-image && make push-docker-image
 notifications:
   email:
     recipients:

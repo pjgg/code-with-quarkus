@@ -7,18 +7,12 @@ export GIT_COMMIT_SHORT=$(git rev-parse HEAD)
 
 if [ -z $GIT_TAG ]
 then
-    export BASE_VERSION="1.0.0-SNAPSHOT";
+    export BASE_VERSION=$GIT_COMMIT;
 else
     export BASE_VERSION=$GIT_TAG
 fi
 
-
-if [ "$GIT_BRANCH" = "master" ]
-then
-    export VERSION=$BASE_VERSION
-else
-    export VERSION=$BASE_VERSION"-SNAPSHOT"
-fi
+export VERSION=$BASE_VERSION
 
 export DOCKER_IMAGE="pjgg/code-with-quarkus:$VERSION"
 
