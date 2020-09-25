@@ -16,7 +16,7 @@ jobs:
       name: openjdk 11 / Build / Test
       jdk: openjdk11
       script: mvn clean test install
-    - stage: package_and_publish
+    - stage: package & publish
       name: package docker image and push to registry
       jdk: openjdk11
       script: make build-docker-native-image && make push-docker-image
