@@ -1,0 +1,22 @@
+language: java
+branches:
+  only:
+    - master
+    - "/^feature-.*/"
+    - "/^hotfix-.*/"
+    - "/^test-.*/"
+    - "/^fix-.*/"
+    - "/^chore-.*/"
+    - "/^doc-.*/"
+jobs:
+  include:
+    - stage: compile
+      name: openjdk 11 / Build / Test
+      jdk: openjdk11
+      script: mvn clean test install
+notifications:
+  email:
+    recipients:
+      - pablo.gonzalez.granados@gmail.com
+    on_success: always
+    on_failure: always
