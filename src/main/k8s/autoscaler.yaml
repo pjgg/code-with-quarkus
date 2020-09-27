@@ -1,13 +1,13 @@
-apiVersion: autoscaling/v1
+apiVersion: apps/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: deputyv2
-  namespace: tongariv2-prod
+  name: code-with-quarkus-app
+  namespace: test-pablo
 spec:
   scaleTargetRef:
     apiVersion: apps/v1beta1
     kind: Deployment
-    name: deputyv2
+    name: code-with-quarkus-app
   minReplicas: 10
   maxReplicas: 50
   targetCPUUtilizationPercentage: 60

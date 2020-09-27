@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: deputyv2
-  namespace: tongariv2-prod
+  name: code-with-quarkus
+  namespace: test-pablo
 spec:
   ports:
   - port: 80
     targetPort: 8080
     name: http
   selector:
-    app: deputyv2
+    app: code-with-quarkus-app
