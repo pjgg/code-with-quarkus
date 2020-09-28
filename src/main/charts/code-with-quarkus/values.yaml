@@ -1,0 +1,33 @@
+base:
+  nameOverride: code-with-quarkus
+  basefqdn: private.dev.example.com
+  basePath: /
+  k8s:
+    service:
+      name: http
+      extraPorts:
+        - name: http
+          protocol: TCP
+          port: 8080
+          internalPort: 8080
+          externalPort: 80
+
+    ## Deployment configuration
+    deployment:
+      environment:
+        extraVars:
+          - name: TEST_PATH
+            value: /tmp/config.yaml
+
+      ## Set resources limits and requests
+      ## always set, if empty you might face resource devastation
+      resources:
+        limits:
+          cpu: 300m
+          memory: 100Mi
+        requests:
+          cpu: 100m
+          memory: 10Mi
+    hpa:
+      minReplicas: 1
+  # Application specific config must be set here only

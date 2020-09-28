@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Code with quarkus
+name: code-with-quarkus
+version: 0.0.2
