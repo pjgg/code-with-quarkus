@@ -31,3 +31,6 @@ Push to DockerHub registry: `make push-docker-image`
 
 Run docker image: `make run-docker-image`
 
+## helm
+
+Under this folder `/src/main/charts` run `helmfile -f helmfile.yaml apply` then `code-with-quarkus` chart will be installed and deployed.
