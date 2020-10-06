@@ -3,18 +3,10 @@ environments:
     values:
       - Namespace: test-pablo
 
-repositories:
-  - name: openshift
-    url: https://api-crc-testing:6443
-
-helmDefaults:
-  kubeContext: api-crc-testing:6443
-  wait: true
-
 releases:
   - name: code-with-quarkus
     namespace: {{ .Values.Namespace }}
     chart: code-with-quarkus
-    version: 0.0.1
+    version: 0.0.7
     values:
       - ./code-with-quarkus/values.yaml
