@@ -28,4 +28,4 @@ notifications:
     on_failure: always
 before_install:
   - openssl aes-256-cbc -K $encrypted_35cc27c77d20_key -iv $encrypted_35cc27c77d20_iv
-    -in settings.xml.enc -out settgins.xml -d
+    -in settings.xml.enc -out settings.xml -d
