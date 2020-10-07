@@ -19,6 +19,7 @@
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <wiremock.version>2.27.2</wiremock.version>
   </properties>
+
   <distributionManagement>
     <repository>
       <id>pjgg-github</id>
@@ -26,6 +27,7 @@
       <url>https://maven.pkg.github.com/pjgg/code-with-quarkus</url>
     </repository>
   </distributionManagement>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
