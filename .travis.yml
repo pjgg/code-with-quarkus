@@ -15,8 +15,8 @@ jobs:
     - stage: compile
       name: openjdk 11 / Build / Test
       jdk: openjdk11
-      script: mvn clean test install
-    - stage: package & publish
+      script: mvn clean test install --settings settings.xml
+    - stage: package & publish --settings settings.xml
       name: package docker image and push to registry
       jdk: openjdk11
       script: make build-docker-native-image && make push-docker-image
@@ -26,3 +26,6 @@ notifications:
       - pablo.gonzalez.granados@gmail.com
     on_success: always
     on_failure: always
+before_install:
+  - openssl aes-256-cbc -K $encrypted_35cc27c77d20_key -iv $encrypted_35cc27c77d20_iv
+    -in settings.xml.enc -out settgins.xml -d
