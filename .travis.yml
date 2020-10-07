@@ -12,14 +12,11 @@ branches:
 
 jobs:
   include:
-    - stage: print_settigns.xml
-      name: cat settings.xml
-      script: ls /
     - stage: compile
       name: openjdk 11 / Build / Test
       jdk: openjdk11
-      script: mvn clean test install --settings settings.xml
-    - stage: package --settings settings.xml & publish --settings settings.xml
+      script: mvn clean test install
+    - stage: package & publish
       name: package docker image and push to registry
       jdk: openjdk11
       script: make build-docker-native-image && make push-docker-image
@@ -32,3 +29,4 @@ notifications:
 before_install:
   - openssl aes-256-cbc -K $encrypted_35cc27c77d20_key -iv $encrypted_35cc27c77d20_iv
     -in settings.xml.enc -out settings.xml -d
+  - cp settings.xml $HOME/.m2/settings.xml
