@@ -12,10 +12,13 @@ branches:
 
 jobs:
   include:
+    - stage: print_settigns.xml
+      name: cat settings.xml
+      script: ls /
     - stage: compile
       name: openjdk 11 / Build / Test
       jdk: openjdk11
-      script: mvn --settings settings.xml clean test install
+      script: mvn clean test install --settings settings.xml
     - stage: package --settings settings.xml & publish --settings settings.xml
       name: package docker image and push to registry
       jdk: openjdk11
