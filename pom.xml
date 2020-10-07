@@ -28,14 +28,6 @@
     </repository>
   </distributionManagement>
 
-  <repositories>
-    <repository>
-      <id>pjgg-github</id>
-      <name>GitHub OWNER Apache Maven Packages</name>
-      <url>https://maven.pkg.github.com/pjgg/code-with-quarkus</url>
-    </repository>
-  </repositories>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
