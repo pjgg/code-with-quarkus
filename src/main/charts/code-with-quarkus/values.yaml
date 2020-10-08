@@ -1,0 +1,170 @@
+# Default values for api.
+
+environment: dev
+basefqdn: private.test.example.com
+name: code-with-quarkus
+
+# Extra hosts for
+hosts: []
+grafana:
+  folder: ""
+  dashboards: []
+
+## Kubernetes specific configuration
+k8s:
+  # Labels and annotations to add in all resources
+  extraLabels:
+    tier: backend
+  extraAnnotations: {}
+  ## Deployment configuration
+  deployment:
+    enabled: true
+    image:
+      repository: pjgg/code-with-quarkus
+      tag: cc77160
+      pullPolicy: IfNotPresent
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 300m
+        memory: 100Mi
+      requests:
+        cpu: 20m
+        memory: 10Mi
+    lifecycle: {}
+    enableLiveness: true
+    livenessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 3
+      failureThreshold: 3
+      successThreshold: 1
+      httpGet:
+        httpHeaders:
+          - name: customer-session-id
+            value: k8s-liveness-probe
+        path: /health/live
+        port: 8080
+    strategy:
+      type: RollingUpdate
+      maxSurge: "25%"
+      maxUnavailable: "25%"
+
+    ## Kubernetes will send traffic when readiness passes
+    enableReadiness: true
+    readinessProbe:
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 1
+      successThreshold: 1
+      httpGet:
+        httpHeaders:
+          - name: customer-session-id
+            value: k8s-liveness-probe
+        path: /health/ready
+        port: 8080
+
+    ## hostAliases allow appending values to the /etc/hosts of the pod
+    hostAliases: []
+    tolerations: []
+    nodeSelector: {}
+
+    environment:
+      extraVars: []
+      extraVarsObject: {}
+
+      renderVars: []
+    extraPorts: []
+
+    # Wether the deployment should be assigned a service account
+    serviceAccount:
+      create: false
+      name: ""
+      # Annotations to add to the service account
+      annotations: {}
+
+    # List of created secrets in the same namespace to be mounted on the deployment
+    externalSecrets:
+
+  service:
+    enabled: true
+    name: http
+    type: ClusterIP
+    externalPort: 80
+    internalPort: 8080
+    protocol: TCP
+    extraPorts: []
+    annotations: {}
+
+  # External Names
+  # Allows creation of externalName services needed for the chart.
+  # For example, the ip of a redis master
+  externalnames: []
+  persistentVolume:
+    enabled: false
+
+    ## deployment data Persistent Volume access modes
+    ## Must match those of existing PV or dynamic provisioner
+    ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    ##
+    accessModes: ReadWriteOnce
+
+    ## deployment data Persistent Volume Claim annotations
+    ##
+    annotations: {}
+
+    ## deployment data Persistent Volume existing claim name
+    ## Requires k8s.deployment.persistentVolume.enabled: true
+    ## If defined, PVC must be created manually before volume will be bound
+    existingClaim: ""
+
+    ## deployment data Persistent Volume mount root path
+    ##
+    mountPath: /data
+
+    ## deployment data Persistent Volume size
+    ##
+    size: 2Gi
+    subPath: ""
+
+  # Kubernetes Horizontal Pod Autoscaler
+  hpa:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 60
+
+  # Kubernetes POD Disruption budget
+  disruptionbudget:
+    enabled: true
+    minAvailable: 1
+
+  # K8s secrets to create (as array)
+  # This should be handled with helm secrets
+  secrets: []
+  secretFiles: {}
+
+  monitoring:
+    serviceMonitor:
+      enabled: false
+      endpoints: []
+    prometheus:
+      enabled: false
+      name: "prometheus-{{ .Release.Namespace }}"
+      rules: {}
+
+
+# Where config.yaml is mounted to
+config:
+  configPath: /etc/config
+  configFile: config.yaml
+  # One of yaml or json
+  configFormat: yaml
+  envvar: CONFIG_PATH
+# Application specific config must be set here only
+# Whatever is under here, will be mounted as a configmap in the pod.
+app: {}
+
+# Extra files for the configmap
+extraconfig: {}

@@ -1,0 +1,58 @@
+{{- if .Values.k8s.deployment.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-with-quarkus
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+      fullapp: {{ .Values.name }}
+  replicas: {{ .Values.k8s.deployment.replicaCount }}
+  strategy:
+    type: {{ .Values.k8s.deployment.strategy.type }}
+  template:
+    metadata:
+      annotations:
+        {{ if .Values.k8s.deployment.podAnnotations }}
+          {{- toYaml .Values.k8s.deployment.podAnnotations | nindent 8}}
+          {{ end }}
+      labels:
+        app: {{ .Values.name }}
+        fullapp: {{ .Values.name }}
+        release: {{ .Values.name }}
+        tier: backend
+    spec:
+      containers:
+        - image: {{ .Values.k8s.deployment.image.repository }}:{{ .Values.k8s.deployment.image.tag }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.k8s.deployment.livenessProbe.httpGet.path }}
+              port: {{ .Values.k8s.deployment.livenessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.k8s.deployment.livenessProbe.initialDelaySeconds }}
+            timeoutSeconds: {{ .Values.k8s.deployment.livenessProbe.timeoutSeconds }}
+            periodSeconds: {{ .Values.k8s.deployment.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.k8s.deployment.livenessProbe.failureThreshold }}
+            successThreshold: {{ .Values.k8s.deployment.livenessProbe.successThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.k8s.deployment.readinessProbe.httpGet.path }}
+              port: {{ .Values.k8s.deployment.readinessProbe.httpGet.port }}
+            initialDelaySeconds: {{ .Values.k8s.deployment.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.k8s.deployment.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.k8s.deployment.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.k8s.deployment.readinessProbe.failureThreshold }}
+            successThreshold: {{ .Values.k8s.deployment.readinessProbe.successThreshold }}
+          resources:
+            requests:
+              cpu: {{ .Values.k8s.deployment.resources.requests.cpu }}
+              memory: {{ .Values.k8s.deployment.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.k8s.deployment.resources.limits.cpu }}
+              memory: {{ .Values.k8s.deployment.resources.limits.memory }}
+          imagePullPolicy: {{ .Values.k8s.deployment.image.pullPolicy }}
+          name: {{ .Values.name }}-app
+          ports:
+            - name: www
+              containerPort: 8080
+  {{- end -}}
